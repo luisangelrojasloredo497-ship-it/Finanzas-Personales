@@ -1,27 +1,11 @@
-# Finanzas Personales
+# Mis Finanzas (PWA)
 
-Aplicación web sencilla para llevar el control de tus ingresos y gastos.
+Aplicación web instalable en el celular para llevar mis finanzas personales. Replica mi libro de Excel:
+efectivo/débito, ingresos y gastos del mes, tarjetas y préstamos, compromisos fijos y "¿me alcanza?".
 
-## Funciones
+- HTML, CSS y JavaScript puro, sin frameworks ni servidor.
+- Los datos se guardan en el teléfono (`localStorage`) y funciona sin internet.
+- Pantallas: Panel, Registrar, Movimientos, Deudas, Compromisos y Ajustes.
+- Exportar/Importar movimientos en CSV y respaldo/restauración completa en JSON.
 
-- Registrar ingresos y gastos con descripción, monto, categoría y fecha.
-- Resumen mensual: ingresos, gastos, balance del mes y saldo total.
-- Gastos por categoría con barras de progreso.
-- Presupuestos mensuales por categoría (se marcan en rojo al excederse).
-- Búsqueda de movimientos y navegación entre meses.
-- Exportar a CSV, crear un respaldo en JSON y restaurarlo.
-- Modo oscuro automático y diseño adaptable a móvil.
-
-Los datos se guardan en el navegador (`localStorage`); no se envían a ningún servidor.
-Haz respaldos en JSON de vez en cuando, porque borrar los datos del navegador también borra tus movimientos.
-
-## Uso
-
-No necesita instalación ni dependencias. Abre `index.html` en tu navegador, o sírvelo localmente:
-
-```bash
-python3 -m http.server 8000
-# luego abre http://localhost:8000
-```
-
-Para publicarla en internet, activa **GitHub Pages** en la configuración del repositorio (Settings → Pages → rama principal, carpeta raíz).
+👉 **Cómo probarla, publicarla en GitHub Pages e instalarla en Android:** ver [INSTRUCCIONES.md](INSTRUCCIONES.md).
