@@ -4,7 +4,7 @@
    (así ves tus cambios al publicar); sin internet usa la copia guardada.
    Si cambias la lista de archivos, sube el número de VERSION. */
 
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = 'mis-finanzas-' + VERSION;
 const ARCHIVOS = [
   './',
@@ -15,6 +15,7 @@ const ARCHIVOS = [
   './iconos/icono-192.png',
   './iconos/icono-512.png',
   './iconos/icono-maskable-512.png',
+  './iconos/icono-apple-180.png',
 ];
 
 self.addEventListener('install', (evento) => {

@@ -12,7 +12,8 @@ Finanzas-Personales/          ← carpeta del proyecto (ábrela completa en VS C
 ├── iconos/
 │   ├── icono-192.png         ← ícono chico
 │   ├── icono-512.png         ← ícono grande
-│   └── icono-maskable-512.png← ícono que Android recorta en círculo/forma
+│   ├── icono-maskable-512.png← ícono que Android recorta en círculo/forma
+│   └── icono-apple-180.png   ← ícono para iPhone
 ├── README.md
 └── INSTRUCCIONES.md          ← este archivo
 ```
@@ -87,6 +88,28 @@ La app se subió en la rama `claude/crear-aplicacion-wz8o8u`. GitHub Pages publi
 3. Toca el menú **⋮** (tres puntos, arriba a la derecha) → **Instalar app** (o **Agregar a pantalla principal** → **Instalar**).
 4. Listo: aparece el ícono **Finanzas** con la moneda dorada en tu pantalla de inicio. Se abre a pantalla completa, como una app normal.
 5. Ábrela una vez con internet. A partir de ahí **funciona sin internet**.
+
+---
+
+## 3b. Instalarla en tu iPhone
+
+En iPhone la app **no se descarga de la App Store** ni se copia la carpeta: se instala desde la dirección de GitHub Pages (sección 2).
+
+1. Abre **Safari** (en iPhone, el botón de instalar está garantizado en Safari).
+2. Entra a `https://TU-USUARIO.github.io/Finanzas-Personales/` y espera a que cargue completa.
+3. Toca el botón **Compartir** (el cuadrito con flecha hacia arriba ⬆️, abajo en el centro).
+4. Desliza hacia abajo y toca **Agregar a pantalla de inicio** (o **Agregar a inicio**).
+5. Deja el nombre **Finanzas** → toca **Agregar** (arriba a la derecha).
+6. Aparece el ícono de la moneda dorada en tu pantalla de inicio. Ábrela desde ahí (no desde Safari):
+   se abre a pantalla completa, como app normal, y funciona sin internet.
+
+**Detalles del iPhone que debes saber:**
+- Los datos de la app instalada están **separados** de los de Safari. Usa siempre el ícono de la pantalla de inicio.
+- Si borras el ícono de la pantalla de inicio, **se borran tus datos**. Haz respaldo antes.
+- Al tocar **Hacer respaldo** o **Exportar CSV**, el iPhone te muestra el archivo: toca Compartir ⬆️ →
+  **Guardar en Archivos** (o mándalo por WhatsApp/correo). Para restaurar, elige el archivo desde **Archivos**.
+- Para pasar tus datos de la computadora al iPhone: en la compu **Hacer respaldo**, mándate el archivo
+  (AirDrop, correo, WhatsApp o iCloud Drive), guárdalo en Archivos y en el iPhone **Ajustes → Restaurar respaldo**.
 
 ---
 
