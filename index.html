@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finanzas Personales</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Finanzas Personales</h1>
+    <div class="month-picker">
+      <button id="prev-month" aria-label="Mes anterior">‹</button>
+      <input type="month" id="month">
+      <button id="next-month" aria-label="Mes siguiente">›</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><span>Ingresos</span><strong id="sum-income" class="pos">$0.00</strong></div>
+      <div class="card"><span>Gastos</span><strong id="sum-expense" class="neg">$0.00</strong></div>
+      <div class="card"><span>Balance del mes</span><strong id="sum-balance">$0.00</strong></div>
+      <div class="card"><span>Saldo total</span><strong id="sum-total">$0.00</strong></div>
+    </section>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>Nuevo movimiento</h2>
+        <form id="tx-form">
+          <div class="type-toggle">
+            <label><input type="radio" name="type" value="expense" checked> Gasto</label>
+            <label><input type="radio" name="type" value="income"> Ingreso</label>
+          </div>
+          <label>Descripción <input name="description" required maxlength="80" placeholder="Ej. Supermercado"></label>
+          <label>Monto <input name="amount" type="number" step="0.01" min="0.01" required></label>
+          <label>Categoría <select name="category" id="category-select"></select></label>
+          <label>Fecha <input name="date" type="date" required></label>
+          <button type="submit" class="primary">Agregar</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Gastos por categoría</h2>
+        <div id="category-breakdown"></div>
+      </section>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Movimientos</h2>
+        <input type="search" id="search" placeholder="Buscar…">
+      </div>
+      <table>
+        <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th class="num">Monto</th><th></th></tr></thead>
+        <tbody id="tx-list"></tbody>
+      </table>
+      <p id="empty" class="muted">No hay movimientos en este mes.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Presupuestos mensuales</h2>
+      <p class="muted">Define un límite de gasto por categoría (deja vacío para no tener límite).</p>
+      <div id="budget-list" class="budget-list"></div>
+    </section>
+
+    <section class="panel tools">
+      <button id="export-csv">Exportar CSV</button>
+      <button id="export-json">Respaldo (JSON)</button>
+      <label class="file-btn">Restaurar respaldo <input type="file" id="import-json" accept="application/json"></label>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
