@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1e3a8a">
+  <meta name="description" content="Control de finanzas personales: efectivo, deudas y compromisos.">
+  <title>Mis Finanzas</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="iconos/icono-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="iconos/icono-apple-180.png">
+  <!-- iPhone: pantalla completa, nombre bajo el ícono y color de la barra de estado -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Finanzas">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <header class="barra-superior">
+    <h1 id="titulo-pantalla">Panel</h1>
+    <span id="etiqueta-mes" class="etiqueta-mes"></span>
+  </header>
+
+  <main>
+    <!-- ============ 1. PANEL ============ -->
+    <section id="panel" class="pantalla">
+      <div class="selector-mes">
+        <label>Mes a consultar <input type="month" class="input-mes"></label>
+        <button type="button" class="btn-mes-actual">Mes actual</button>
+      </div>
+
+      <div class="tarjeta destacada">
+        <span>Dinero disponible (efectivo / débito)</span>
+        <strong id="p-efectivo"></strong>
+      </div>
+
+      <div class="cuadricula-kpi">
+        <div class="kpi"><span>Ingresos del mes</span><strong id="p-ingresos" class="positivo"></strong></div>
+        <div class="kpi"><span>Egresos del mes en efectivo</span><strong id="p-egresos" class="negativo"></strong></div>
+        <div class="kpi"><span>Balance del mes</span><strong id="p-balance"></strong></div>
+        <div class="kpi"><span>Disponible en crédito</span><strong id="p-credito"></strong></div>
+        <div class="kpi"><span>Deuda total en tarjetas</span><strong id="p-deuda-tarjetas"></strong></div>
+        <div class="kpi"><span>Deuda total en préstamos</span><strong id="p-deuda-prestamos"></strong></div>
+        <div class="kpi ancho"><span>DEUDA TOTAL</span><strong id="p-deuda-total" class="negativo"></strong></div>
+        <div class="kpi"><span>Compromisos fijos del mes</span><strong id="p-comp-total"></strong></div>
+        <div class="kpi"><span>Compromisos ya pagados</span><strong id="p-comp-pagado"></strong></div>
+        <div class="kpi"><span>Compromisos pendientes</span><strong id="p-comp-pendiente"></strong></div>
+        <div class="kpi"><span>¿Me alcanza?</span><strong id="p-alcanza"></strong></div>
+        <div class="kpi"><span>Cargado a tarjetas este mes</span><strong id="p-cargado"></strong></div>
+        <div class="kpi"><span>Deuda abonada en el mes</span><strong id="p-abonado"></strong></div>
+        <div class="kpi ancho"><span>Disponible total (efectivo + crédito)</span><strong id="p-disponible-total"></strong></div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Ingresos del mes por fuente</h2>
+        <table class="tabla"><tbody id="p-tabla-fuentes"></tbody></table>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Gastos del mes por categoría</h2>
+        <p class="nota">Incluye Gastos y Pagos.</p>
+        <table class="tabla"><tbody id="p-tabla-categorias"></tbody></table>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Mis deudas hoy</h2>
+        <table class="tabla">
+          <thead><tr><th>Cuenta</th><th class="num">Saldo</th><th class="num">Disponible</th></tr></thead>
+          <tbody id="p-tabla-deudas"></tbody>
+        </table>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Próximos pagos fijos</h2>
+        <table class="tabla">
+          <thead><tr><th>Compromiso</th><th>Fecha</th><th class="num">Pendiente</th></tr></thead>
+          <tbody id="p-tabla-proximos"></tbody>
+        </table>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Saldo vs. disponible por cuenta</h2>
+        <div class="leyenda">
+          <span><i class="muestra saldo"></i> Saldo</span>
+          <span><i class="muestra disponible"></i> Disponible</span>
+        </div>
+        <div id="p-grafica" class="grafica"></div>
+      </div>
+    </section>
+
+    <!-- ============ 2. REGISTRAR ============ -->
+    <section id="registrar" class="pantalla" hidden>
+      <form id="form-mov" class="tarjeta formulario" novalidate>
+        <h2 id="form-mov-titulo">Nuevo movimiento</h2>
+
+        <label>Fecha <input type="date" name="fecha"></label>
+
+        <label>Tipo
+          <select name="tipo">
+            <option value="">— Elige —</option>
+            <option>Ingreso</option>
+            <option>Gasto</option>
+            <option>Pago</option>
+          </select>
+        </label>
+
+        <label><span id="etiqueta-categoria">Categoría</span>
+          <select name="categoria"></select>
+        </label>
+
+        <label>Concepto <input name="concepto" maxlength="100" placeholder="Ej. Despensa"></label>
+
+        <label>Cuenta / Deuda
+          <select name="cuenta"></select>
+        </label>
+
+        <label id="campo-pagado-con">Pagado con
+          <select name="pagadoCon"></select>
+        </label>
+
+        <label>Monto <input name="monto" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00"></label>
+
+        <div id="vista-previa" class="vista-previa"></div>
+        <ul id="errores-mov" class="errores"></ul>
+
+        <div class="botones">
+          <button type="submit" class="primario" id="btn-guardar-mov">Guardar</button>
+          <button type="button" id="btn-cancelar-edicion" hidden>Cancelar edición</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ 3. MOVIMIENTOS ============ -->
+    <section id="movimientos" class="pantalla" hidden>
+      <div class="filtros">
+        <input type="search" id="buscar-mov" placeholder="Buscar concepto, categoría, cuenta…">
+        <select id="filtro-mes-mov"></select>
+      </div>
+      <p id="resumen-mov" class="nota"></p>
+      <div id="lista-mov" class="lista"></div>
+    </section>
+
+    <!-- ============ 4. DEUDAS ============ -->
+    <section id="deudas" class="pantalla" hidden>
+      <div id="lista-deudas" class="lista"></div>
+    </section>
+
+    <!-- ============ 5. COMPROMISOS ============ -->
+    <section id="compromisos" class="pantalla" hidden>
+      <div class="selector-mes">
+        <label>Mes a consultar <input type="month" class="input-mes"></label>
+        <button type="button" class="btn-mes-actual">Mes actual</button>
+      </div>
+      <div id="lista-compromisos" class="lista"></div>
+    </section>
+
+    <!-- ============ 6. AJUSTES ============ -->
+    <section id="ajustes" class="pantalla" hidden>
+      <div class="tarjeta formulario">
+        <h2>General</h2>
+        <label>Efectivo / débito inicial
+          <input type="number" id="aj-efectivo" inputmode="decimal" step="0.01">
+        </label>
+        <div class="selector-mes">
+          <label>Mes a consultar <input type="month" class="input-mes"></label>
+          <button type="button" class="btn-mes-actual">Mes actual</button>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Fuentes de ingreso</h2>
+        <ul class="lista-editable" id="aj-fuentes"></ul>
+        <form class="agregar-item" data-lista="fuentes">
+          <input placeholder="Nueva fuente" maxlength="40" required>
+          <button type="submit">Agregar</button>
+        </form>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Categorías de gasto</h2>
+        <ul class="lista-editable" id="aj-categorias"></ul>
+        <form class="agregar-item" data-lista="categorias">
+          <input placeholder="Nueva categoría" maxlength="40" required>
+          <button type="submit">Agregar</button>
+        </form>
+      </div>
+
+      <div class="tarjeta">
+        <div class="encabezado">
+          <h2>Deudas</h2>
+          <button type="button" id="btn-nueva-deuda" class="primario">+ Agregar</button>
+        </div>
+        <ul class="lista-editable" id="aj-deudas"></ul>
+      </div>
+
+      <div class="tarjeta">
+        <div class="encabezado">
+          <h2>Compromisos</h2>
+          <button type="button" id="btn-nuevo-compromiso" class="primario">+ Agregar</button>
+        </div>
+        <ul class="lista-editable" id="aj-compromisos"></ul>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Movimientos en CSV</h2>
+        <p class="nota">Columnas: Fecha, Tipo, Categoría/Fuente, Concepto, Cuenta/Deuda, Pagado con, Monto.</p>
+        <div class="botones">
+          <button type="button" id="btn-exportar-csv">Exportar CSV</button>
+          <label class="boton-archivo">Importar CSV (agregar)
+            <input type="file" id="importar-csv-agregar" accept=".csv,text/csv">
+          </label>
+          <label class="boton-archivo">Importar CSV (reemplazar)
+            <input type="file" id="importar-csv-reemplazar" accept=".csv,text/csv">
+          </label>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Respaldo completo (JSON)</h2>
+        <p class="nota">Guarda TODO: efectivo inicial, listas, deudas, compromisos y movimientos. Haz uno seguido.</p>
+        <div class="botones">
+          <button type="button" id="btn-respaldo">Hacer respaldo</button>
+          <label class="boton-archivo">Restaurar respaldo
+            <input type="file" id="restaurar-json" accept=".json,application/json">
+          </label>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <h2>Zona de peligro</h2>
+        <button type="button" id="btn-reiniciar" class="peligro">Restablecer datos iniciales</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Navegación inferior -->
+  <nav class="navegacion">
+    <a href="#panel" data-pantalla="panel"><span>🏠</span>Panel</a>
+    <a href="#registrar" data-pantalla="registrar"><span>➕</span>Registrar</a>
+    <a href="#movimientos" data-pantalla="movimientos"><span>📋</span>Movs.</a>
+    <a href="#deudas" data-pantalla="deudas"><span>💳</span>Deudas</a>
+    <a href="#compromisos" data-pantalla="compromisos"><span>📅</span>Compr.</a>
+    <a href="#ajustes" data-pantalla="ajustes"><span>⚙️</span>Ajustes</a>
+  </nav>
+
+  <!-- Diálogo: deuda -->
+  <dialog id="dlg-deuda">
+    <form id="form-deuda" class="formulario" novalidate>
+      <h2 id="dlg-deuda-titulo">Deuda</h2>
+      <label>Cuenta (nombre) <input name="nombre" maxlength="40"></label>
+      <label>Tipo
+        <select name="tipo"><option>Tarjeta</option><option>Préstamo</option></select>
+      </label>
+      <label>Saldo inicial <input name="saldoInicial" type="number" inputmode="decimal" step="0.01" min="0"></label>
+      <label class="solo-tarjeta">Disponible inicial <input name="disponibleInicial" type="number" inputmode="decimal" step="0.01" min="0"></label>
+      <label>Pago fijo (opcional) <input name="pagoFijo" type="number" inputmode="decimal" step="0.01" min="0"></label>
+      <label>Día de corte (opcional) <input name="diaCorte" type="number" min="1" max="31"></label>
+      <label>Día límite de pago (opcional) <input name="diaLimite" type="number" min="1" max="31"></label>
+      <label>Estatus
+        <select name="estatus">
+          <option>Al día</option><option>Atrasada</option><option>Atrasado</option><option>Liquidada</option><option>Liquidado</option>
+        </select>
+      </label>
+      <ul class="errores"></ul>
+      <div class="botones">
+        <button type="submit" class="primario">Guardar</button>
+        <button type="button" class="btn-cerrar">Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Diálogo: compromiso -->
+  <dialog id="dlg-compromiso">
+    <form id="form-compromiso" class="formulario" novalidate>
+      <h2 id="dlg-compromiso-titulo">Compromiso</h2>
+      <label>Nombre <input name="nombre" maxlength="40"></label>
+      <label>Frecuencia
+        <select name="frecuencia"><option>Mensual</option><option>Quincenal</option></select>
+      </label>
+      <label>Día 1 <input name="dia1" type="number" min="1" max="31"></label>
+      <label class="solo-quincenal">Día 2 <input name="dia2" type="number" min="1" max="31"></label>
+      <label>Monto por pago <input name="monto" type="number" inputmode="decimal" step="0.01" min="0"></label>
+      <ul class="errores"></ul>
+      <div class="botones">
+        <button type="submit" class="primario">Guardar</button>
+        <button type="button" class="btn-cerrar">Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
